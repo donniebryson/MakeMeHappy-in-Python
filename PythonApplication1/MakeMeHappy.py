@@ -14,7 +14,7 @@
 
 # The code was testing with Python 3.6.
 
-# All credit is given to Dale Lane for the fantastic job he did with Machine Learning for Kids without intangling him in any 
+# All credit is given to Dale Lane for the fantastic job he did with Machine Learning for Kids without entangling him in any 
 # of my mistakes potentially here. 
 # Direct corrections and suggestions for this Python code to: donniebryson@gmail.com 
 
@@ -23,8 +23,6 @@ import json
 
 with open("config.json") as my_config:
     my_json_config = json.loads(my_config.read())
-
-print(my_json_config['workspace_id']);
 
 watson_assistant = AssistantV1(
     version='2018-02-16',
