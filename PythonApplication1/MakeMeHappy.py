@@ -1,23 +1,35 @@
 # This is as simple a Python script as possible. 
-# It seeks to duplicate the function in the Machine Learning for Kids project
+# It seeks to fulfill the same user story as the Machine Learning for Kids worksheet
 # 'Make me happy' which is written in Scratch. 
 
 # It assumes that a class has already completed the project in Scratch on the
 # website: https://machinelearningforkids.co.uk/#!/worksheets 
 # If the Scratch version of the worksheet is complete, then the student has a workspace_id, username, and password for Watson.
-# The student also has their model created and tested. 
+# The student also has their model created and tested. These are needed for this script to work.
+
+# The file, example_config_file.txt, must be edited to include your actual workspace_id, username, and password and then renamed
+# config.json in the same direcory as MakeMeHappy.py.
+
+# Each student will need to execute 'pip install watson_developer_cloud' for the proper Watson library. 
+
+# The code was testing with Python 3.6.
 
 # All credit is given to Dale Lane for the fantastic job he did with Machine Learning for Kids without intangling him in any 
-# of my mistakes potentially here.
+# of my mistakes potentially here. 
+# Direct corrections and suggestions for this Python code to: donniebryson@gmail.com 
 
 from watson_developer_cloud import AssistantV1
 import json
 
+with open("config.json") as my_config:
+    my_json_config = json.loads(my_config.read())
+
+print(my_json_config['workspace_id']);
 
 watson_assistant = AssistantV1(
     version='2018-02-16',
-    username='6d6cc51c-d711-4f2e-b717-aba62f1949eb',
-    password='Cc4hKrzGpjjg'
+    username=my_json_config['username'], 
+    password=my_json_config['password'], 
 )
 
 
@@ -27,7 +39,7 @@ def GetOpinion():
 
 def CheckResponse(r):
     response = watson_assistant.message(
-        workspace_id='937c9d3b-1683-44fe-95d2-fd3a8d22c6c8',
+        workspace_id=my_json_config['workspace_id'], 
         input={
             'text': r
         }
