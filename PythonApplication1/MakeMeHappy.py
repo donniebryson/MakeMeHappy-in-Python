@@ -5,7 +5,7 @@
 # It assumes that a class has already completed the project in Scratch on the
 # website: https://machinelearningforkids.co.uk/#!/worksheets 
 # If the Scratch version of the worksheet is complete, then the student has a workspace_id, username, and password for Watson.
-# The student also has their model created and tested. These are needed for this script to work.
+# The student must have their model created and tested. These are needed for this script to work.
 
 # The file, example_config_file.txt, must be edited to include your actual workspace_id, username, and password and then renamed
 # config.json in the same direcory as MakeMeHappy.py.
