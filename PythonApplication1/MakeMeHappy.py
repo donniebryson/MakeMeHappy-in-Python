@@ -20,8 +20,10 @@
 
 from watson_developer_cloud import AssistantV1
 import json
+import os
+import sys
 
-with open("config.json") as my_config:
+with open(os.path.dirname(os.path.abspath( __file__ )) + r"\config.json") as my_config:
     my_json_config = json.loads(my_config.read())
 
 watson_assistant = AssistantV1(
@@ -35,27 +37,73 @@ def GetOpinion():
     line = input("What do you think of me? ");
     return line;
 
-def CheckResponse(r):
-    response = watson_assistant.message(
-        workspace_id=my_json_config['workspace_id'], 
-        input={
-            'text': r
-        }
-    )
-    # Never assume you are going to get valid input
-    if response['intents'] is None or response['intents'] == []:
-        r = 'unknown'
-    elif response['intents'][0]['intent'] == 'happy':
-        r = 'good'
-    else:
-        r = 'bad'
-    # Let the person know if you are taking it as an insult or a complement
-    if r == "good":
-        print("You make me happy!");
-    elif r == "bad":
-        print ("You made me sad!");
-    else:
-        print ("Who knows what you think?");
+class MachineLearningHandTooled:
+    """Hand Tooled Machine Learning Class"""
 
-CheckResponse(GetOpinion());
+    def load(self):
+        with open(os.path.dirname(os.path.abspath( __file__ )) + r"\keywords.json") as my_data:
+            my_json_data = json.loads(my_data.read())
+            self.happy = my_json_data['happy']
+            self.sad = my_json_data['sad']
 
+    def __init__(self):
+        self.happy = ["pretty", "smart", "friendly"]
+        self.sad = ["ugly", "dumb", "mean"]
+        self.load()
+    
+
+    def guess(self, s):
+        happyCount = 0
+        sadCount = 0
+        for h in self.happy:
+            if h in s:
+                happyCount += 1
+        for sw in self.sad:
+            if sw in s:
+                sadCount += 1
+        if happyCount > sadCount:
+            return "happy"
+        elif sadCount > happyCount:
+            return "sad"
+        else:
+            return "unknown"
+        
+class MachineLearningWatson:    
+    """Machine Learning Class using Watson"""
+
+    def __init__(self):
+        pass
+    
+    def load(self):
+        pass
+
+    def guess(self, s):
+        response = watson_assistant.message(
+            workspace_id=my_json_config['workspace_id'], 
+            input={
+                'text': s
+            }
+        )   
+        # Never assume you are going to get valid input
+        if response['intents'] is None or response['intents'] == []:
+            r = 'unknown'
+        elif response['intents'][0]['intent'] == 'happy':
+            r = 'happy'
+        else:
+            r = 'sad'
+        return r
+ 
+if my_json_config['watson'] == "no":
+    ml_engine = MachineLearningHandTooled()
+else:
+    ml_engine = MachineLearningWatson()
+
+line = GetOpinion()
+res = ml_engine.guess(line)
+
+if ( res == "happy"):
+    print("Your kindness has made me happy.")
+elif ( res == "sad"):
+    print("Your rudeness has mad me sad.")
+else:
+    print("I do not know what you think.")
